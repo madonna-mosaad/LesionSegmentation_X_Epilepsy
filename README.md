@@ -25,6 +25,22 @@ Under the supervision of:
 
 ---
 
+## Project Status: In Development
+
+This repository is currently under active development. Core modules, preprocessing workflows, and model training pipelines are still being built and tested.
+Key components—including data harmonization, multi-sequence training strategies, and evaluation metrics—are subject to change as the project evolves.
+
+Planned updates include:
+
+* End-to-end nnUNet training for T1, FLAIR, and joint inputs
+* Comparative benchmarking across architectures
+* Integration of clinical metadata
+* Full documentation and reproducible workflows
+
+Expect rapid iteration and incomplete workflows until the first stable release.
+
+---
+
 ## Project Structure
 
 ```
