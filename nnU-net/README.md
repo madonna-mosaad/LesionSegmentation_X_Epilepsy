@@ -1,39 +1,81 @@
 # nnU-Net for FCD Lesion Segmentation
 
-This directory contains the implementation of the nnU-Net framework for Focal Cortical Dysplasia (FCD) lesion segmentation, organized into three sequential Jupyter notebooks. These notebooks serve as a complete pipeline from training to interference.
+This repository contains a complete pipeline for Focal Cortical Dysplasia (FCD) lesion segmentation using nnU-Net. It is designed to handle class imbalance through custom oversampling and is organized for easy local or cloud execution.
 
-## Notebooks
+## 📂 Project Structure
 
-The notebooks are numbered to indicate the execution order:
+```
+nnU-net/
+├── notebooks/                         # Executable Jupyter Notebooks
+│   ├── 00_Data_Preprocessing.ipynb
+│   ├── 01_Train_Oversampling.ipynb
+│   ├── 02_Continue_Training.ipynb
+│   └── 03_Inference.ipynb
+│
+├── src/                               # Source Code & Config
+│   ├── config.py                      # Central configuration
+│   ├── splits_final.json              # Fixed cross-validation splits
+│   └── custom_nnunet/                 # Custom logic (Trainer, DataLoader)
+│
+└── data/                              # Data Directory (Expected Input)
+    ├── bonn_fcd_fixed/                # Raw MRI data
+    └── participants-data/             # Excel metadata
+```
 
-### [01_Train_Oversampling.ipynb](./01_Train_Oversampling.ipynb)
+## 🚀 Setup Instructions
 
-**Purpose:** Main training pipeline.
+### 1. Data Preparation
 
-* Implements a custom `nnUNetTrainer` to handle class imbalance.
-* Applies **oversampling** for rare subjects (non-cortical thickening).
-* Configures doubled data augmentation parameters (rotation, scaling, intensity).
-* Enforces fixed 5-fold cross-validation splits.
+You must place your data in the `data/` folder as follows:
 
-### [02_Continue_Training.ipynb](./02_Continue_Training.ipynb)
+1. **Raw Images**: Place your dataset folder (e.g., `bonn_fcd_fixed`) inside `nnU-net/data/`.
+2. **Metadata**: Place your `participants.xlsx` inside `nnU-net/data/participants-data/`.
 
-**Purpose:** Resuming training from a checkout.
+*Note: If your data is located elsewhere, you can modify `DATA_ROOT` in `src/config.py`, but keeping the default structure is recommended.*
 
-* Used when training is interrupted or needs to continue for more epochs.
-* Restores the trainer state and continues from the last saved checkpoint.
+### 2. Configuration (`src/config.py`)
 
-### [03_Inference.ipynb](./03_Inference.ipynb)
+All global parameters are managed in `src/config.py`. You should edit this file to match your experiment needs.
 
-**Purpose:** Inference and evaluation.
+**Key Parameters to Edit:**
 
-* Loads the trained model checkpoint.
-* Reconstructs the necessary nnU-Net folder structure for inference.
-* Runs predictions on test images.
-* Evaluates performance using Dice, IoU, Precision, Recall, and HD95 metrics.
-* Visualizes segmentation results against ground truth.
+* **`TRAINING_TIME_MINUTES`**: Maximum duration for training (default: 11h 45m). Useful for time-limited environments like Kaggle.
+* **`OVERSAMPLE_FACTOR`**: How much more frequently rare subjects should be sampled (default: `3.0`).
+* **`RARE_SUBJECTS`**: A list of string IDs (e.g., `'sub-00001'`) that represent the minority class/rare cases to oversample.
 
-## Key Features
+## 🏃‍♂️ How to Run
 
-* **Custom Trainer:** `nnUNetTrainerOversampling` designed for unbalanced datasets.
-* **Oversampling:** Targeted sampling of rare FCD subtypes.
-* **Kaggle/Colab Compatibility:** Scripts include environment setup and path configuration for cloud environments.
+The pipeline is divided into sequential notebooks located in the `notebooks/` folder.
+
+### Step 1: Data Preprocessing
+
+Open and run **`notebooks/00_Data_Preprocessing.ipynb`**.
+
+* **What it does:** Converts your Excel/MRI data into the format required by nnU-Net (`dataset.json`, organized images) and saves it to `data/nnUNet_raw`.
+* **Output:** `data/nnUNet_raw/Dataset002_BonnFCD_FLAIR`
+
+### Step 2: Training
+
+Open and run **`notebooks/01_Train_Oversampling.ipynb`**.
+
+* **What it does:** Starts the training process using the custom `nnUNetTrainerOversampling`.
+* **Important:** You can change the `FOLD` variable in the notebook to train different Cross-Validation folds (0-4).
+* **Output:** Checkpoints are saved to `data/nnUNet_results`.
+
+### Step 3: Continue Training (Optional)
+
+If training was interrupted or you want to add more epochs, run **`notebooks/02_Continue_Training.ipynb`**.
+
+* **What it does:** Automatically finds the last checkpoint and resumes training.
+
+### Step 4: Inference
+
+Open and run **`notebooks/03_Inference.ipynb`**.
+
+* **What it does:** Uses the trained model to predict segmentation masks for test images.
+* **Metrics:** Calculates Dice, IoU, and other metrics to evaluate performance.
+
+## 🛠 Customization
+
+* **Splits**: The 5-fold cross-validation splits are fixed in `src/splits_final.json`. Edit this file to change which subjects are in which fold.
+* **Model Logic**: To modify the trainer or data loading logic, edit the Python files in `src/custom_nnunet/`.
