@@ -18,6 +18,61 @@ This study establishes a **leakage-free benchmark** for automated FCD lesion seg
 - **Phenotype-Aware Oversampling**: A novel data-centric strategy that prioritizes rare radiological signs (Transmantle Sign, Gray-White Matter Blurring) during training.
 - **Transparent Baseline**: We expose the "Leakage Gap" in existing literature, where reported Dice scores (~0.45) are inflated by improper validation.
 
+## Repository Structure
+
+```
+.
+├── data/                # Dataset (Download instructions below)
+├── figures/             # Final figures used in the paper
+├── notebooks/           # Sequential, reproducible steps (Preprocessing, Training, Inference)
+├── results/             # Outputs and Checkpoints
+├── src/                 # Core logic and configurations
+│   ├── custom_nnunet/   # Custom modules specific to your method
+│   └── config.py        # Central configuration
+├── .gitignore           # Strict component exclusions
+├── LICENSE              # MIT License
+├── README.md            # Project Documentation
+└── requirements.txt     # Python dependencies
+```
+
+## Getting Started
+
+### Prerequisites
+
+- Python 3.8+
+- PyTorch 2.0+
+- nnU-Net v2
+
+### Installation
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/YassienTawfikk/LesionSegmentation_X_Epilepsy.git
+   cd LesionSegmentation_X_Epilepsy
+   ```
+
+2. Install dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+### Data Setup
+
+1. Download the [Bonn FCD II dataset](https://openneuro.org/datasets/ds004199).
+2. Place the dataset in the `data/` directory.
+3. Ensure `participants.tsv` is in `data/participants-data/`.
+
+## Usage
+
+The workflow is organized into sequential notebooks for reproducibility:
+
+1. **Preprocessing**: `notebooks/00_Data_Preprocessing.ipynb`
+   - Prepares the dataset for nnU-Net.
+2. **Training**: `notebooks/01_Train_Oversampling.ipynb`
+   - Trains the model with phenotype-aware oversampling.
+3. **Inference**: `notebooks/03_Inference.ipynb`
+   - Runs inference on the test set and generates evaluation metrics.
+
 ## Results
 
 Our rigorous evaluation establishes a realistic baseline for FCD detection, distinguishing true clinical utility from inflated metrics.
@@ -28,49 +83,6 @@ Our rigorous evaluation establishes a realistic baseline for FCD detection, dist
 | **Proposed Framework** | **0.56 ± 0.18** | **0.23 ± 0.03** | **Stable convergence, captures rare phenotypes** |
 
 *Table: Comparative benchmarking. Note that "Test Dice (Strict)" is lower than typical literature values (e.g., 0.41-0.45) because we prevent data leakage and do not use post-processing.*
-
-## Methodology
-
-### Pipeline Overview
-
-- **Architecture**: nnU-Net (3d_fullres)
-
-- **Preprocessing**: No skull-stripping (preserves cortical boundaries).
-- **Augmentation**: Aggressive spatial (±60° rotation, 0.7-1.5x scaling) and intensity transformations.
-- **Sampling**: Custom `Abnormality-Aware Sampling` to oversample subjects with rare FCD features (3x frequency).
-- **Leakage Prevention**: Validation and Test sets are strictly isolated at the subject level.
-
-### Repository Structure
-
-```
-.
-├── notebooks/           # Jupyter Notebooks for Data Prep, Training, and Inference
-├── src/                 # Source code, Configuration, and Custom nnU-Net Modules
-├── data/                # Dataset directory (Bonn FCD II)
-├── figures/             # Generated figures and plots
-├── results/             # Evaluation metrics and checkpoints
-└── requirements.txt     # Python dependencies
-```
-
-## Usage
-
-### 1. Installation
-
-```bash
-pip install -r requirements.txt
-```
-
-### 2. Data Setup
-
-Download the [Bonn FCD II dataset](https://openneuro.org/datasets/ds004199) and place it in the `data/` directory. Ensure `participants.tsv` is in `data/participants-data/`.
-
-### 3. Running the Pipeline
-
-The workflow is organized into sequential notebooks:
-
-1. **Preprocessing**: `notebooks/00_Data_Preprocessing.ipynb`
-2. **Training**: `notebooks/01_Train_Oversampling.ipynb`
-3. **Inference**: `notebooks/03_Inference.ipynb`
 
 ## Citation
 

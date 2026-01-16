@@ -1,8 +1,41 @@
-/__pycache__/
-/.idea/
-/.ipynb_checkpoints/
+# Python defaults
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
 
-.DS_Store
+# Virtual Environment
+.env
 .venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
 
-/results/Evaluation
+# IDEs
+.vscode/
+.idea/
+*.DS_Store
+
+# Project Specific
+results/
+data/
