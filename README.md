@@ -18,20 +18,38 @@ This study establishes a **leakage-free benchmark** for automated FCD lesion seg
 - **Phenotype-Aware Oversampling**: A novel data-centric strategy that prioritizes rare radiological signs (Transmantle Sign, Gray-White Matter Blurring) during training.
 - **Transparent Baseline**: We expose the "Leakage Gap" in existing literature, where reported Dice scores (~0.45) are inflated by improper validation.
 
-## Repository Structure
+<p align="center">
+  <img src="figures/Test_Dice_Evaluation_Protocol_Impact.png" alt="Leakage Analysis" width="80%">
+  <br>
+  <em>Figure: The "Leakage Gap". Comparison of naive evaluation (permitting leakage) vs. strict subject-level holdout.</em>
+</p>
+
+
+## Methodology
+
+### Pipeline Overview
+
+<p align="center">
+  <img src="figures/Leakage_Free_nnUNet_Workflow.png" alt="Methodology Overview" width="100%">
+  <br>
+  <em>Figure: Overview of the proposed leakage-free FCD detection framework.</em>
+</p>
+
+- **Architecture**: nnU-Net (3d_fullres)
+- **Preprocessing**: No skull-stripping (preserves cortical boundaries).
+- **Augmentation**: Aggressive spatial (±60° rotation, 0.7-1.5x scaling) and intensity transformations.
+- **Sampling**: Custom `Abnormality-Aware Sampling` to oversample subjects with rare FCD features (3x frequency).
+- **Leakage Prevention**: Validation and Test sets are strictly isolated at the subject level.
+
+### Repository Structure
 
 ```
 .
-├── data/                # Dataset (Download instructions below)
-├── figures/             # Final figures used in the paper
-├── notebooks/           # Sequential, reproducible steps (Preprocessing, Training, Inference)
-├── results/             # Outputs and Checkpoints
-├── src/                 # Core logic and configurations
-│   ├── custom_nnunet/   # Custom modules specific to your method
-│   └── config.py        # Central configuration
-├── .gitignore           # Strict component exclusions
-├── LICENSE              # MIT License
-├── README.md            # Project Documentation
+├── notebooks/           # Jupyter Notebooks for Data Prep, Training, and Inference
+├── src/                 # Source code, Configuration, and Custom nnU-Net Modules
+├── data/                # Dataset directory (Bonn FCD II)
+├── figures/             # Generated figures and plots
+├── results/             # Evaluation metrics and checkpoints
 └── requirements.txt     # Python dependencies
 ```
 
@@ -76,6 +94,12 @@ The workflow is organized into sequential notebooks for reproducibility:
 ## Results
 
 Our rigorous evaluation establishes a realistic baseline for FCD detection, distinguishing true clinical utility from inflated metrics.
+
+<p align="center">
+  <img src="figures/Qualitative_Test_Set_Results.png" alt="Qualitative Results" width="100%">
+  <br>
+  <em>Figure: Qualitative capabilities of the proposed model. Top row: Successful detection of subtle lesions. Bottom row: Challenging cases.</em>
+</p>
 
 | Method | Validation Dice | Test Dice (Strict) | Notes |
 | :--- | :---: | :---: | :--- |
