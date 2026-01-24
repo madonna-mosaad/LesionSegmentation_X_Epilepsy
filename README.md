@@ -1,45 +1,42 @@
-# Benchmarking FCD Lesion Detection: A Leakage-Free and Clinically Realistic Evaluation Framework
+# Evaluation of nnU-Net for FCD II Lesions Segmentation in FLAIR MRI
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Dataset: OpenNeuro](https://img.shields.io/badge/Dataset-OpenNeuro%20ds004199-blue.svg)](https://openneuro.org/datasets/ds004199)
 
-**Official PyTorch Implementation** of the paper: *Benchmarking FCD Lesion Detection: A Leakage-Free and Clinically Realistic Evaluation Framework*.
+**Official PyTorch Implementation** of the paper: *Evaluation of nnU-Net for FCD II Lesion Segmentation in FLAIR MRI*.
+
+<p align="center">
+  <img src="figures/nnU-Net PIPELINE.png" alt="nnU-Net Pipeline" width="100%">
+  <br>
+  <em>Figure: Overview of the proposed nnU-Net v2 pipeline.</em>
+</p>
 
 ## Abstract
 
-Epilepsy affects more than 60 million people worldwide, with approximately one-third experiencing drug-resistant epilepsy. Focal Cortical Dysplasia (FCD) is a major cause in these patients, frequently presenting as MRI-negative lesions that evade visual detection. Surgical resection offers potential seizure freedom, but success critically depends on accurate lesion localization. Current deep learning approaches report high segmentation performance; however, these metrics may be inflated due to evaluation protocols that permit data leakage and lack rigorous generalization testing.
-
-This study establishes a **leakage-free benchmark** for automated FCD lesion segmentation using the histologically confirmed Bonn FCD Type II dataset. We enforce strict subject-level cross-validation to prevent slice-level data leakage and evaluate model performance without heuristic post-processing. Our **data-centric optimization strategy** prioritizes preservation of cortical boundaries and careful handling of rare, subtle lesion phenotypes (like Transmantle Sign and Gray-White Matter Blurring) often missed by standard architectures.
+Epilepsy is one of the most common neurological disorders worldwide. Focal Cortical Dysplasia (FCD) is a major cause of drug-resistant epilepsy, often presenting as subtle lesions on MRI scans. While deep learning shows promise for automated FCD segmentation, existing methods achieved limited performance and used inconsistent dataset splits that prevent reproducible comparison. In this study, we propose an nnU-Net-based approach for automated FCD segmentation using the Bonn FCD Type II dataset. To improve model performance, our proposed approach employs oversampling of underrepresented FCD Type II radiological features and uses extensive augmentation during the training phase. We achieved an average validation Pseudo Dice of 0.56 compared to 0.45 in prior work, demonstrating significant performance improvement. This work provides the first complete evaluation on the dataset's standard train/test split, reporting both validation and test set performance to establish a reproducible benchmark for future method comparison. By providing both improved segmentation performance and a standardized evaluation framework, our work advances automated FCD segmentation toward better presurgical evaluation and improved outcomes for patients with drug-resistant epilepsy.
 
 ## Key Contributions
 
-- **Leakage-Free Benchmark**: Strict subject-level cross-validation on the Bonn FCD Type II dataset to prevent slice-level data leakage.
-- **Clinically Realistic Evaluation**: Evaluation on full 3D volumes without skull-stripping or heuristic post-processing (CCA), reflecting real-world clinical performance.
-- **Phenotype-Aware Oversampling**: A novel data-centric strategy that prioritizes rare radiological signs (Transmantle Sign, Gray-White Matter Blurring) during training.
-- **Transparent Baseline**: We expose the "Leakage Gap" in existing literature, where reported Dice scores (~0.45) are inflated by improper validation.
-
-<p align="center">
-  <img src="figures/Test_Dice_Evaluation_Protocol_Impact.png" alt="Leakage Analysis" width="80%">
-  <br>
-  <em>Figure: The "Leakage Gap". Comparison of naive evaluation (permitting leakage) vs. strict subject-level holdout.</em>
-</p>
-
+- **Reproducible Benchmark**: First complete evaluation on the Bonn FCD Type II dataset's standard train/test split, establishing a reliable baseline for future comparisons.
+- **Improved Performance**: Achieved significant improvement in segmentation performance (Validation Pseudo Dice 0.56 vs. 0.45 in prior work) through radiological feature-based oversampling and extensive augmentation.
+- **Radiological Feature-Awareness**: Addressed class imbalance by oversampling subtle and underrepresented radiological features (Transmantle Sign, Gray-White Matter Blurring).
 
 ## Methodology
 
 ### Pipeline Overview
 
-<p align="center">
-  <img src="figures/Leakage_Free_nnUNet_Workflow.png" alt="Methodology Overview" width="100%">
-  <br>
-  <em>Figure: Overview of the proposed leakage-free FCD detection framework.</em>
-</p>
+
 
 - **Architecture**: nnU-Net (3d_fullres)
-- **Preprocessing**: No skull-stripping (preserves cortical boundaries).
-- **Augmentation**: Aggressive spatial (±60° rotation, 0.7-1.5x scaling) and intensity transformations.
-- **Sampling**: Custom `Abnormality-Aware Sampling` to oversample subjects with rare FCD features (3x frequency).
-- **Leakage Prevention**: Validation and Test sets are strictly isolated at the subject level.
+- **Data Splitting**: Adherence to the standard 57/28 train/test split to ensure reproducibility.
+- **Preprocessing**: nnU-Net v2 automated preprocessing with resampling.
+- **Radiological Feature-Based Sampling**: 3x oversampling for subjects with rare radiological features (Transmantle Sign, Gray-White Matter Blurring) to address class imbalance.
+- **Extensive Augmentation**: Enhanced augmentation parameters to improve generalization:
+    - **Rotation**: ±60°
+    - **Scaling**: [0.70, 1.50]
+    - **Brightness/Contrast**: [0.5, 1.5]
+    - **Gaussian Noise**: $\sigma=0.2$
+    - **Gamma**: [0.4, 2.0]
 
 ### Repository Structure
 
@@ -65,8 +62,8 @@ This study establishes a **leakage-free benchmark** for automated FCD lesion seg
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/YassienTawfikk/LesionSegmentation_X_Epilepsy.git
-   cd LesionSegmentation_X_Epilepsy
+   git clone https://github.com/YassienTawfikk/nnU-FCD.git
+   cd nnU-FCD
    ```
 
 2. Install dependencies:
@@ -87,26 +84,38 @@ The workflow is organized into sequential notebooks for reproducibility:
 1. **Preprocessing**: `notebooks/00_Data_Preprocessing.ipynb`
    - Prepares the dataset for nnU-Net.
 2. **Training**: `notebooks/01_Train_Oversampling.ipynb`
-   - Trains the model with phenotype-aware oversampling.
+   - Trains the model with radiological feature-based oversampling.
 3. **Inference**: `notebooks/03_Inference.ipynb`
    - Runs inference on the test set and generates evaluation metrics.
 
 ## Results
 
-Our rigorous evaluation establishes a realistic baseline for FCD detection, distinguishing true clinical utility from inflated metrics.
+We evaluated our model on the standard train/test split.
+
+### Ablation Study (Test Set)
+
+Our ablation study demonstrates the progressive improvement of our contributions:
+
+| Experiment | Best Val. PDS | Best Test DS |
+| :--- | :---: | :---: |
+| Baseline (BSL) | 0.545 | 0.168 |
+| BSL + Oversampling (OVS) | 0.466 | 0.219 |
+| **BSL + OVS + Augmentation (Proposed)** | **0.667** | **0.256** |
 
 <p align="center">
-  <img src="figures/Qualitative_Test_Set_Results.png" alt="Qualitative Results" width="100%">
+  <img src="figures/Ablation-Study.png" alt="Ablation Study Results" width="100%">
   <br>
-  <em>Figure: Qualitative capabilities of the proposed model. Top row: Successful detection of subtle lesions. Bottom row: Challenging cases.</em>
+  <em>Figure: Qualitative improvements from Ablation Study. Row 1: Baseline. Row 2: +Oversampling. Row 3: +Augmentation (Proposed).</em>
 </p>
 
-| Method | Validation Dice | Test Dice (Strict) | Notes |
-| :--- | :---: | :---: | :--- |
-| Baseline (Standard nnU-Net) | 0.45 ± 0.05 | -- | High variance, erratic convergence |
-| **Proposed Framework** | **0.56 ± 0.18** | **0.23 ± 0.03** | **Stable convergence, captures rare phenotypes** |
+### Comparison with State-of-the-Art (Standard Split)
 
-*Table: Comparative benchmarking. Note that "Test Dice (Strict)" is lower than typical literature values (e.g., 0.41-0.45) because we prevent data leakage and do not use post-processing.*
+| Method | Post-Processing | Mean Val. PDS | Best Val. PDS |
+| :--- | :---: | :---: | :---: |
+| Joshi et al. [14] | CCA | 0.45 | 0.52 |
+| **Proposed** | **None** | **0.54** | **0.65** |
+
+*Note: Validation PDS (Pseudo Dice Score) is computed patch-wise during training/validation.*
 
 ## Citation
 
@@ -114,8 +123,8 @@ If you use this code or dataset split in your research, please cite our paper:
 
 ```bibtex
 @article{Tawfik2024FCD,
-  title={Benchmarking FCD Lesion Detection: A Leakage-Free and Clinically Realistic Evaluation Framework},
-  author={Tawfik, Yassien and Marwan, Mazen and Yasser, Mohamed and Mahmoud, Nancy and Mosaad, Madonna and Khalaf, Aya and Yasser, Mahmoud},
+  title={Evaluation of nnU-Net for FCD II Lesion Segmentation in FLAIR MRI},
+  author={Tawfik, Yassien and Marwan, Mazen and Yasser, Mohamed and Mahmoud, Nancy and Mosaad, Madonna and Salman, Mahmoud and Basha, Tamer and Khalaf, Aya},
   journal={Department of Systems and Biomedical Engineering, Cairo University},
   year={2024}
 }
@@ -123,6 +132,7 @@ If you use this code or dataset split in your research, please cite our paper:
 
 ## Authors
 
-- **Yassien Tawfik**, Mazen Marwan, Mohamed Yasser, Nancy Mahmoud, Madonna Mosaad (Cairo University)
+- **Yassien Tawfik**, **Mazen Marwan**, **Mohamed Yasser**, **Nancy Mahmoud**, **Madonna Mosaad** (Cairo University)
+- **Mahmoud Salman** (Cairo University, Western University)
+- **Tamer Basha** (Cairo University)
 - **Aya Khalaf** (Yale University)
-- **Mahmoud Yasser** (Western University)
