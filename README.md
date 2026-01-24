@@ -112,7 +112,7 @@ Our ablation study demonstrates the progressive improvement of our contributions
 
 | Method | Post-Processing | Mean Val. PDS | Best Val. PDS |
 | :--- | :---: | :---: | :---: |
-| Joshi et al. [14] | CCA | 0.45 | 0.52 |
+| Joshi et al. | CCA | 0.45 | 0.52 |
 | **Proposed** | **None** | **0.54** | **0.65** |
 
 *Note: Validation PDS (Pseudo Dice Score) is computed patch-wise during training/validation.*
