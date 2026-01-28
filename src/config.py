@@ -58,8 +58,8 @@ def setup_env():
     print(f"   RESULTS: {nnUNet_results}")
 
 def add_custom_modules_to_path():
-    """Adds custom_nnunet directory to python path"""
-    custom_dir = os.path.join(BASE_DIR, "custom_nnunet")
+    """Adds nnunet_extensions directory to python path"""
+    custom_dir = os.path.join(BASE_DIR, "nnunet_extensions")
     if custom_dir not in sys.path:
         sys.path.insert(0, custom_dir)
         print(f"✅ Added {custom_dir} to sys.path")
