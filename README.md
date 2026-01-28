@@ -42,8 +42,14 @@ Epilepsy is one of the most common neurological disorders worldwide. Focal Corti
 
 ```
 .
-├── notebooks/           # Jupyter Notebooks for Data Prep, Training, and Inference
-├── src/                 # Source code, Configuration, and Custom nnU-Net Modules
+├── notebooks/
+│   ├── 00_Dataset_Preparation.ipynb      # Common dataset setup
+│   ├── proposed_method/                  # Proposed Method (OVS + Aug)
+│   ├── baseline_oversampling_method/     # Ablation: Baseline + Oversampling
+│   └── baseline_method/                  # Ablation: Baseline
+├── src/
+│   ├── config.py
+│   └── nnunet_extensions/                # Shared custom Trainer & DataLoader
 ├── data/                # Dataset directory (Bonn FCD II)
 ├── figures/             # Generated figures and plots
 ├── results/             # Evaluation metrics and checkpoints
@@ -79,14 +85,25 @@ Epilepsy is one of the most common neurological disorders worldwide. Focal Corti
 
 ## Usage
 
-The workflow is organized into sequential notebooks for reproducibility:
+The workflow is organized into separate experiments for reproducibility:
 
-1. **Preprocessing**: `notebooks/00_Data_Preprocessing.ipynb`
-   - Prepares the dataset for nnU-Net.
-2. **Training**: `notebooks/01_Train_Oversampling.ipynb`
-   - Trains the model with radiological feature-based oversampling.
-3. **Inference**: `notebooks/03_Inference.ipynb`
-   - Runs inference on the test set and generates evaluation metrics.
+### Step 0: Data Setup
+- Run `notebooks/00_Dataset_Preparation.ipynb` to download and preprocess the dataset.
+
+### Experiment 1: Proposed Method (Best Performance)
+The core contribution of the paper (Oversampling + Augmentation).
+1. `notebooks/proposed_method/01_Train_Proposed_Model.ipynb`
+2. `notebooks/proposed_method/03_Inference_Proposed.ipynb`
+
+### Experiment 2: Baseline + Oversampling (Ablation)
+Isolates the effect of radiological oversampling without extensive augmentation.
+1. `notebooks/baseline_oversampling_method/01_Train_BSL_OVS_Model.ipynb`
+2. `notebooks/baseline_oversampling_method/03_Inference_BSL_OVS.ipynb`
+
+### Experiment 3: Baseline (Standard nnU-Net)
+Standard nnU-Net training for performance comparison.
+1. `notebooks/baseline_method/01_Train_Baseline_Model.ipynb`
+2. `notebooks/baseline_method/03_Inference_Baseline.ipynb`
 
 ## Results
 
