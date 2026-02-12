@@ -11,12 +11,12 @@
   <em>Figure: Overview of the proposed nnU-Net v2 pipeline.</em>
 </p>
 
-## Pretrained Models (Checkpoints)
+## Pretrained Models (Checkpoint)
 
 We provide pretrained nnU-Net v2 checkpoints for the experiment.
 
 - **Recommended (Proposed: BSL + OVS + Aug)** — best overall performance  
-  **Google Drive:** [Download checkpoint](https://drive.google.com/file/d/1KL6BwuhixWB1SuQzru_pkD2Jx4_8yjQY/view?usp=share_link)
+  **Google Drive:** [Download checkpoint](https://drive.google.com/file/d/1KL6BwuhixWB1SuQzru_pkD2Jx4_8yjQY/view?usp=share_link) <br>
   **Notes:** trained on the standard Bonn FCD II split used in this repo.
 
 ## Abstract
@@ -283,7 +283,7 @@ If you use this code or dataset split in your research, please cite our paper:
     <tr>
       <td align="center">
         <a href="https://www.linkedin.com/in/tamer-basha-b81812ab/" target="_blank">
-          <img src="https://media.licdn.com/dms/image/v2/C5103AQEkkCY9JaaHTQ/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1517586051833?e=1770854400&v=beta&t=dZaKaGmqW-0RJwHGhjnH9RgE19UAbu9fow0PsU43mFU" width="135px;" alt="Tamer Basha"/>
+          <img src="https://media.licdn.com/dms/image/v2/C5103AQEkkCY9JaaHTQ/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1517586051833?e=1772668800&v=beta&t=yluL2Xa1N5UEb7w8EEiatadwA9xM7KPOzutf05yJkMI" width="135px;" alt="Tamer Basha"/>
           <br/>
           <sub><b>Tamer Basha</b></sub>
         </a>
