@@ -13,7 +13,7 @@
 
 ## Pretrained Models (Checkpoint)
 
-We provide pretrained nnU-Net v2 checkpoints for the experiment.
+We provide pretrained nnU-Net v2 checkpoints for the experiment .
 
 - **Recommended (Proposed: BSL + OVS + Aug)** — best overall performance  
   **Google Drive:** [Download checkpoint](https://drive.google.com/file/d/1KL6BwuhixWB1SuQzru_pkD2Jx4_8yjQY/view?usp=share_link) <br>
